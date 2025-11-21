@@ -1,0 +1,62 @@
+n >> 1 (produces a shifted value but does not change n)
+
+n >>= 1 (shifts and updates n)
+
+
+- Example with n >> 1
+
+n = 22           # binary: 10110
+x = n >> 1       # x becomes the shifted value
+
+
+- What happens
+
+n = 10110
+n >> 1 → 01011   (binary)
+
+
+- Explaination
+
+x = 11 (because 01011 in decimal = 11)
+
+n stays 22 (unchanged)
+
+ >> does NOT modify n — it only gives the shifted result.
+
+
+
+
+
+- Example with n >>= 1
+
+n = 22           # binary: 10110
+n >>= 1          # n becomes the shifted value
+
+
+- What happens
+
+10110 → 01011
+
+
+- Explaination
+
+n becomes 11
+(because 01011 in decimal = 11)
+
+ >>= updates n to the shifted value.
+
+
+- Summary
+
+| Operation | Effect on `n`         | Meaning                     |
+| --------- | --------------------- | --------------------------- |
+| `n >> 1`  | ❌ does NOT change `n` | Only returns a shifted copy |
+| `n >>= 1` | ✔ modifies `n`        | Same as `n = n >> 1`        |
+
+
+
+- Final
+
+>>  → just get the shifted result
+>>= → shift and replace n
+
