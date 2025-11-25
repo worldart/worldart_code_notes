@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Supply and Demand Chart</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        h1 {
+            text-align: center;
+            color: #333;
+        }
+        .chart-container {
+            position: relative;
+            width: 100%;
+            height: 400px;
+            margin: 30px 0;
+        }
+        .axis {
+            position: absolute;
+            border: 1px solid #333;
+        }
+        .x-axis {
+            width: 100%;
+            height: 1px;
+            bottom: 50px;
+            left: 0;
+        }
+        .y-axis {
+            width: 1px;
+            height: 100%;
+            bottom: 50px;
+            left: 50px;
+        }
+        .axis-label {
+            position: absolute;
+            font-size: 14px;
+            color: #333;
+        }
+        .price-label {
+            left: 10px;
+            top: 10px;
+        }
+        .output-label {
+            bottom: 30px;
+            right: 10px;
+        }
+        .line {
+            position: absolute;
+            height: 2px;
+            background-color: #333;
+        }
+        .supply-line {
+            background-color: #3498db;
+            transform-origin: left;
+            transform: rotate(45deg);
+            width: 300px;
+            bottom: 50px;
+            left: 50px;
+        }
+        .demand-line {
+            background-color: #e74c3c;
+            transform-origin: left;
+            transform: rotate(-45deg);
+            width: 300px;
+            bottom: 50px;
+            left: 50px;
+        }
+        .point {
+            position: absolute;
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background-color: #333;
+            transform: translate(-50%, 50%);
+        }
+        .equilibrium {
+            background-color: #2ecc71;
+            width: 10px;
+            height: 10px;
+        }
+        .label {
+            position: absolute;
+            font-size: 12px;
+            color: #333;
+        }
+        .legend {
+            display: flex;
+            justify-content: center;
+            margin-top: 20px;
+        }
+        .legend-item {
+            display: flex;
+            align-items: center;
+            margin: 0 15px;
+        }
+        .legend-color {
+            width: 20px;
+            height: 3px;
+            margin-right: 5px;
+        }
+        .supply-legend {
+            background-color: #3498db;
+        }
+        .demand-legend {
+            background-color: #e74c3c;
+        }
+        .controls {
+            display: flex;
+            justify-content: center;
+            margin-top: 20px;
+            gap: 10px;
+        }
+        button {
+            padding: 8px 15px;
+            background-color: #3498db;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #2980b9;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Supply and Demand Chart</h1>
+        
+        <div class="chart-container">
+            <!-- Axes -->
+            <div class="axis x-axis"></div>
+            <div class="axis y-axis"></div>
+            
+            <!-- Axis labels -->
+            <div class="axis-label price-label">Price</div>
+            <div class="axis-label output-label">Industry output</div>
+            
+            <!-- Supply and Demand lines -->
+            <div class="line supply-line"></div>
+            <div class="line demand-line"></div>
+            
+            <!-- Points and labels -->
+            <div class="point equilibrium" style="bottom: 200px; left: 200px;"></div>
+            <div class="label" style="bottom: 210px; left: 220px;">P*</div>
+            <div class="label" style="bottom: 180px; left: 220px;">Q*</div>
+            
+            <div class="point" style="bottom: 150px; left: 250px;"></div>
+            <div class="label" style="bottom: 160px; left: 270px;">P₁</div>
+            <div class="label" style="bottom: 130px; left: 270px;">Q₁</div>
+            
+            <!-- Line labels -->
+            <div class="label" style="bottom: 300px; left: 350px;">S = MCI</div>
+            <div class="label" style="bottom: 100px; left: 350px;">D</div>
+            <div class="label" style="bottom: 200px; left: 350px;">MSCI</div>
+            <div class="label" style="bottom: 150px; left: 350px;">MECI</div>
+        </div>
+        
+        <div class="legend">
+            <div class="legend-item">
+                <div class="legend-color supply-legend"></div>
+                <span>Supply (S)</span>
+            </div>
+            <div class="legend-item">
+                <div class="legend-color demand-legend"></div>
+                <span>Demand (D)</span>
+            </div>
+        </div>
+        
+        <div class="controls">
+            <button id="resetBtn">Reset to Equilibrium</button>
+            <button id="shiftSupplyBtn">Shift Supply</button>
+            <button id="shiftDemandBtn">Shift Demand</button>
+        </div>
+    </div>
+
+    <script>
+        document.getElementById('resetBtn').addEventListener('click', function() {
+            // Reset to initial state
+            document.querySelector('.supply-line').style.transform = 'rotate(45deg)';
+            document.querySelector('.demand-line').style.transform = 'rotate(-45deg)';
+            
+            // Reset points
+            document.querySelector('.equilibrium').style.bottom = '200px';
+            document.querySelector('.equilibrium').style.left = '200px';
+            
+            document.querySelector('.point:not(.equilibrium)').style.bottom = '150px';
+            document.querySelector('.point:not(.equilibrium)').style.left = '250px';
+        });
+
+        document.getElementById('shiftSupplyBtn').addEventListener('click', function() {
+            // Shift supply line
+            const supplyLine = document.querySelector('.supply-line');
+            const currentTransform = supplyLine.style.transform;
+            const currentAngle = parseInt(currentTransform.match(/rotate\(([-]?\d+)deg\)/)[1]);
+            supplyLine.style.transform = `rotate(${currentAngle + 10}deg)`;
+        });
+
+        document.getElementById('shiftDemandBtn').addEventListener('click', function() {
+            // Shift demand line
+            const demandLine = document.querySelector('.demand-line');
+            const currentTransform = demandLine.style.transform;
+            const currentAngle = parseInt(currentTransform.match(/rotate\(([-]?\d+)deg\)/)[1]);
+            demandLine.style.transform = `rotate(${currentAngle - 10}deg)`;
+        });
+    </script>
+</body>
+</html>
